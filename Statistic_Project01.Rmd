@@ -1,0 +1,438 @@
+<body>
+<style>
+body{
+font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+     background: url('1924557.jpg');
+     line-height:1.8;
+     color:##8f9294;
+     margin:0;
+     font-size:initial;
+}
+
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.headers{
+    background: url('https://ak.picdn.net/shutterstock/videos/20543599/thumb/1.jpg');
+    background-size: 1000px;
+    padding:6%;
+    background-size:120%;
+    line-height:1.4;
+    font-family:cursive;
+}
+
+.headers h1{
+font-size: 260%;
+
+}
+.nav>li>a{
+color:#9a9305;
+}
+
+
+h1{
+color:#6395bdfc;
+}
+.headers h2{
+color:#6395bdfc;
+
+}
+</style>
+  <script>
+$(document).ready(function(){
+	$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+		localStorage.setItem('activeTab', $(e.target).attr('href'));
+	});
+</script>
+
+  <script>
+        $("#profile-tab").tabs({
+          active: 0,
+          activate: function (event, ui) {
+            var active = $('#profile-tab').tabs('intro', 'active');
+          }
+      });</script>
+
+  <title></title>
+
+  <div class="headers">
+  <h1>World happiness project - Data Analysis</h1>
+
+  <h3>24 June, 2021</h3>
+  </div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active show" id="profile-tab" data-toggle="tab" href="#intro" role="tab" aria-controls="profile" aria-selected="true">Introduction</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link " id="home-tab" data-toggle="tab" href="#import_tidy" role="tab" aria-controls="home" aria-selected="true">Data import and Tidying</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#Modal_one_" role="tab" aria-controls="contact" aria-selected="false">Modal one-Hypothesis test</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#Modal_two" role="tab" aria-controls="contact" aria-selected="false">Modal two-Multiple Regression</a>
+  </li>
+  <li class="nav-item">
+  <a class="nav-link" id="new" data-toggle="tab" href="#Discussion" role="tab" aria-controls="contact" aria-selected="false">Discussion and Conclusions</a>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+  <div class="intro">
+  </div>
+  </div>
+
+
+  
+<div class="tab-pane fade" id="intro" role="tabpanel" aria-labelledby="profile-tab">
+  <h1>Background</h1>
+  <h4>Our data set comes from Gallup World Poll (From Kaggle).This data frame has an evaluation of happiness around different countries in the world, considering some aspects that effect our life and determine the level of our well-being.</h4><br>
+  <p>
+  
+  <h4>Our goals in this report are:</h4>
+ <p> 1. We will tidy up the data and present it.<br>
+  2. We will analyze and visualize the information, using the previous models which we have acquired throughout this semester.
+  3.Finally, we will explain our findings and  share  our conclusions.</p>
+  <div>
+<img src="world_happiness.png"
+     alt="Markdown Monster icon" width ="600" height="420"/>
+</div>
+  <h4>The models we chose to apply are:</h4>
+  <ol>
+  <il>1. Multiple liner regression</il><br>
+  <il>2. one sided hypothesis T-test</il>
+  </ol>
+  <p class="main_into_parh">
+  The results are based on answers to the main life evaluation questions asked in the poll. 
+This dataset comes from Kaggle website.The happiness score based on cantril ladder. These questions ask respondents to think of a ladder with the best possible life for them being a 10, and worst possible life being a 0. The respondents rate their own current lives based on that scale, the data is gathered by countries and the region is specified too. 
+  The columns following the happiness score estimate the extent to which each of six factors
+  economic production, social support, life expectancy, freedom, absence of corruption, and generosity, influences happiness among the respondents.
+  </p>
+
+</div>
+
+
+
+<div class="tab-pane fade" id="import_tidy" role="tabpanel" aria-labelledby="profile-tab">
+<h1> Data Import And Tidying </h1>
+<p>
+The dataset imported as a CSV file- a convenient format to work with.The attached libraries used us for analyis the dataset by our chosen models.
+</p>
+```{r}
+suppressWarnings(suppressMessages(library(tidyverse)))
+suppressWarnings(suppressMessages(library(ggplot2)))
+suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(rworldmap)))
+suppressWarnings(suppressMessages(library(ggmap)))
+suppressWarnings(suppressMessages(library(ggcorrplot)))
+suppressWarnings(suppressMessages(library(ggpubr)))
+suppressWarnings(suppressMessages(library(plotly)))
+suppressWarnings(suppressMessages(library(gapminder)))
+suppressWarnings(suppressMessages(library(forcats)))
+suppressWarnings(suppressMessages(library(magrittr)))
+```
+
+```{r }
+World_happiness <- read.csv("world-happiness-report-2021 (1).csv")
+```
+
+```{r}
+library(reactable)
+reactable(World_happiness)
+```
+
+```{r }
+str(World_happiness)
+```
+
+<h4>Displays the dimensions of the Data set</h4>
+```{r }
+dim(World_happiness)
+```
+
+<h4>Provide summaries of the data set with few descriptive statistics</h4>
+
+```{r}
+summary(World_happiness) 
+```
+
+<p>Densities plot of each of the factor that represents an effective way to understand the distribution  of each independence variable</p>
+```{r}
+density_social_support <- density(World_happiness$Social.support)         
+density_Healthy.life.expectancy <- density(World_happiness$Healthy.life.expectancy)                     
+density_Freedom.to.make.life.choices <- density(World_happiness$Freedom.to.make.life.choices)                     
+density_Generosity <- density(World_happiness$Generosity)                     
+density_Perceptions.of.corruption <- density(World_happiness$Perceptions.of.corruption)                     
+
+suppressWarnings(suppressMessages(attach(mtcars)))
+par(mfrow=c(3,2))
+suppressWarnings(suppressMessages(plot(density_social_support, main="Density of Social support", col="purple")) +polygon(density_social_support, col="orange"))
+suppressWarnings(suppressMessages(plot(density_Healthy.life.expectancy, main="Density of Freedom.to.make.life.choices")) +polygon(density_Healthy.life.expectancy, col="green"))
+suppressWarnings(suppressMessages(plot(density_Freedom.to.make.life.choices, main="Density of Freedom.to.make.life.choices")) +polygon(density_Freedom.to.make.life.choices, col="yellow"))
+suppressWarnings(suppressMessages(plot(density_Generosity, main="Density of Freedom.to.make.life.choices")) +polygon(density_Generosity, col="purple"))
+suppressWarnings(suppressMessages(plot(density_Perceptions.of.corruption, main="Density of Perceptions.of.corruption")) +polygon(density_Perceptions.of.corruption, col="blue"))
+
+```
+
+</div>
+
+
+
+  <div class="tab-pane fade" id="Modal_one_" role="tabpanel" aria-labelledby="contact-tab">
+  <h1>Hypothesis T-test</h1>
+  <h3>We made a map to show the happiness scores around the world.</h3>
+
+```{r }
+df<-data.frame(x=World_happiness$ï..Country.name, y=World_happiness$Ladder.score)
+ladder_score<-World_happiness$Ladder.score
+countries<-World_happiness$ï..Country.name
+plot_geo(df,locationmode ='country names') %>%
+  add_trace(locations=~countries,z=~ladder_score,color=~ladder_score)%>%
+  layout(title="COUNTIERS HAPPINESS SCORE MAP")
+```
+  <p> We can observe from our map that the locations differ from one another by having different happiness scores. There are some counties where no data is available so this region is colored white.
+We can observe that some regions, such as America, parts of Europe, and Australia, seem to have on a higher level of happiness.  Asia, on the other hand, is in the middle rank, while the majority of Africa is in the lower happiness ranking.</p>
+  
+  
+  <h3>We want to use t test for to examine the difference in means.</h3>
+  <p> t test will examine the difference in means. The test frequently used in hypothesis testing to see whether an variable  has an effect on a population of interest, or if two groups vary from one another.</p>
+  <p>
+  Our goal is to determine if logged GDP per capita, which stands for GDP = Gross Domestic product, per person is effecting there ladder score of happiness. We use the group by to group the areas of the countries and count the mean of their GDP per capita.
+  Looking at the means, we can't be sure if that is a reliable difference.So ,to make a simple example, does the fact that my GDP per capita is higher will make me more likely to be happier then you? now or in the future..
+  </p>
+  <h4>Our H0  :  LADDER SCORE  IS  NOT HIGHER WHEN GDP IS HIGH</h4>
+  <h4>Our H1  :  LADDER SCORE IS HIGHER WHEN GDP IS HIGH</h4>
+```{r}
+t.test(World_happiness$Ladder.score,World_happiness$Logged.GDP.per.capita, mu=0,alt="greater",conf=0.95,var.eq=F,paried=FALSE)
+
+```
+<h4>So from the t test we can see that our H1 hypothesis is true.</h4>
+
+```{r}
+region<-group_by(World_happiness,Regional.indicator)
+s<-summarise(region, meanGDP=mean(Logged.GDP.per.capita,NA.RN = TRUE),meanScore=mean(Ladder.score,NA.RN=TRUE))
+show(s)
+
+```
+
+```{r}
+p<- ggplot(region,aes(y=Logged.GDP.per.capita))+geom_boxplot()+labs(title = "GDP PER CAPITA BOXPLOT")
+ggplotly(p)
+abovemidian<-World_happiness%>% 
+  summarise(ï..Country.name,Logged.GDP.per.capita>median(Logged.GDP.per.capita))
+
+```
+<p> The boxplot shows the median GDP and the shape of the distribution.</p>
+
+<p>
+plot the count of regions and there mean GDP the fill is the mean happiness in those areas  
+</p>
+```{r}
+pointPlot<-ggplot(data =s,aes(x=meanGDP,y= meanScore))+
+  geom_point(aes(color= Regional.indicator,size=meanScore))+
+  geom_smooth()+labs(title="HAPPINESS SCORE PER REGION
+                     SHOWED BY MEAN GDP")
+ggplotly(pointPlot)
+```
+
+
+<p>From our plot we can see, that the alternative hypothesis is true
+The plot shows that as the mean GDP is higher the mean ladder score is higher too.
+We used geom_point to present the points of gdp and score of each region.
+Also, the size of each point represents the region mean happiness score.
+We added plotly for comfortable navigation of the data, to show the region name  and values.
+
+</p>
+```{r}
+MS<-ggplot(s, aes(x=meanScore)) + geom_density() + geom_vline(data=s,aes(xintercept=mean(meanScore),colour="SCORE"),linetype="dashed", size=1)+labs(title ="SCORE MEAN DENSITY")
+MG<-ggplot(s, aes(x=meanGDP)) +geom_density()+geom_vline(data=s, aes(xintercept=mean(meanGDP),colour="GDP"),linetype="dashed", size=1)+labs(title ="GDP MEAN DENSITY")
+ggplotly(MS)
+ggplotly(MG)
+```
+<h5>The plots presents the smoothed distribution of the points along the numeric axis.</h5>
+<p>Our numeric axis is the mean ladder score by region and the mean of all regions.And the same for GDP.
+We chose to use geom_density because the peaks represent the highest concentration of points.
+We added ggplotly so its easier to show the data that presented. </p>
+
+```{r}
+var(s$meanScore)
+var(s$meanGDP)
+```
+<h5>Variance is a measure of variability form the mean. </h5>
+</div>
+  
+  
+  
+  
+  <div class="tab-pane fade" id="Modal_two" role="tabpanel" aria-labelledby="contact-tab">
+  <h1>Multiple Linear Regression </h1>
+  <h3>There are different methods to perform correlation analysis:</h3>
+  <p>We choose to demonstrate the relationship between the countries happiness scores and six factors that were the Categories when the score was built.  
+  </p>
+  <p>
+  The Multiple Regression used to predict an outcome variable y on the basis of multiple predictor variables.
+  <h3> y = b0 + b1*x1 + b2*x2 + b3*x3 </h3>
+  
+  <h3>Dependent Variable - Scor. </h3>
+  <h3>Independent Variables -GDP per capita, Social support, Healthy life expectancy, Freedom to make life choices,Generosity, Perceptions of corruption.</h3> 
+  <p/>
+
+
+```{r }
+select_ciritions <- c("Ladder.score"
+                      ,"Logged.GDP.per.capita",
+                      "Social.support", 
+                      "Healthy.life.expectancy",
+                      "Freedom.to.make.life.choices", 
+                      "Generosity", 
+                      "Perceptions.of.corruption")
+
+Criteria_for_happiness <- World_happiness %>%
+  select(select_ciritions)
+```    
+<h3>Assumptions for regression</h3>
+<ol>
+<li>There must be linear relationship between the out come variable and the independent variables.</li>
+<li>Multivariate Normality–Multiple regression assumes that the residuals are normally distributed.</li>
+<li>Multicollinearity - Multiple regression assumes that the independent variables are no highly correlated with his others - as we can distinguish in the correlation headman there are predictors variables that has correlation , we can examine it with VIF test(Variance inflation Factor).</il>
+</ol>
+
+
+```{r}
+corr <- round(cor(Criteria_for_happiness[2:7]),1)
+happiness_correlation_matrix <- head(corr[,1:5])
+ggcorrplot(corr) %>%
+  ggplotly()
+```
+<h4>We Computed the correlation matrix between happiness factors.</h4>
+<p>As we can observe, there are some variables with a strong correlation and some with low. We use  corrplot to highlight the most correlated. </p>
+```{r}
+pairs(data=Criteria_for_happiness, ~Logged.GDP.per.capita+Social.support+
+Healthy.life.expectancy+Freedom.to.make.life.choices+Perceptions.of.corruption+Generosity,main='independent variables Scatterplots', ,col=c('red','blue'))
+```
+<p>There are linear patterns between some of the pair of variable, like the relationship between "GDP per capita" and "Healthy life expectancy" that has strong relationship.As approved in out project, despite not all the assumptions are accepted we will examine the Multiple regression model.</p>
+  
+  
+<h2> Multiple Regression fitting </h2>
+```{R}
+Multiple_Regression_model <- lm(Ladder.score ~ Logged.GDP.per.capita+ Social.support + Healthy.life.expectancy + Freedom.to.make.life.choices + Generosity + Perceptions.of.corruption, data = World_happiness)
+summary(Multiple_Regression_model)
+```
+<p>The Estimate column in the coefficients table estimate b0 and b1 for each independent variable.</p>
+<h3>The model is:</h3>
+<h4>Score(y) =-2.23722 + 0.27953(GDP.per.capita) + 2.47621(social.support) + 0.03031(Healthy.life.expectancy) +2.01046(Freedom.to.make.life.choices) + 0.36438(Generosity) + -0.60509(Perceptions.of.corruption)</h4>
+
+<P> In order to analysis the multiple regression , we examined the F-statistic and the associated p-value.</p>
+<p> As we can see, the p-value of the F-statistic is smaller than 2.2e-16 - it means that the model has highly significant.By examine all the predictors variables we are using coefficients to represent the estimate of the regression.</p>
+
+
+```{R}
+coefficients(Multiple_Regression_model) # model coefficients
+anova(Multiple_Regression_model) #Anova table
+
+layout(matrix(c(1,2,3,4),2,2)) # optional 4 graphs/page
+plot(Multiple_Regression_model)
+```
+
+<h2> Model accuracy assessment </h2>
+<p>The quality of the model can be assessed by examining the R-square and the RSE(Residual standard error</p>
+<p>In our model the R-square represents the correlation coefficient between the observed values of the total score (y) and fitted the predicted value of y</p>
+<we would like to calculate  RES estimate that measure the error of prediction of the score for all countries.<p/>
+```{R}
+sigma(Multiple_Regression_model)/mean(World_happiness$Ladder.score)
+
+```
+<p>Our RSE is lower than 0.1, the lower of the RES the more accurate the mode.</p>
+
+
+<h1>Partial F-test </h1>
+<p> Using the partial F test we determine the difference between multiple regression mode and nested model that contains all the factors except <strong>Freedom to make life choices factor</strong>.As you can see below this is the model without the freedom factor.</p>
+
+```{r}
+partial_Multiple_Regression_model <- lm(Ladder.score ~ Logged.GDP.per.capita+ Social.support + Healthy.life.expectancy  + Generosity + Perceptions.of.corruption, data = World_happiness)
+summary(partial_Multiple_Regression_model)
+
+```
+
+<p>To examine the F-test , we calculated the F test-static</p>
+```{r}
+Full_model_rrs <- sum((fitted(Multiple_Regression_model)- mean(World_happiness$Ladder.score))^2)
+partial_Multiple_Regression_model
+partial_model_rrs <- sum((fitted(partial_Multiple_Regression_model)- mean(World_happiness$Ladder.score))^2)
+
+Full_model_rrs
+partial_model_rrs
+```
+<p>Now we used the F test by the formula with ANOVA table, we use the Anova to show the estimation of how variables chances according to the level of one of more independent variables.</p>
+```{r}
+anova(Multiple_Regression_model, partial_Multiple_Regression_model)
+
+```
+
+
+<p>Based on the Null hypothesis of the F-model , Due to the results we  have evidence to believe that the full model is significant better because the pr > F is 7.978e.</p>
+</div>
+
+<div class="tab-pane fade" id="Discussion" role="tabpanel" aria-labelledby="contact-tab">
+<h1>Our conclusions:</h1>
+<h4>This assignment taught us a lot about the usage of R and implementations of  statistical models.</h4>
+<p>
+The analysis showed that happiness, as subjective as it is, when translated into quantitative variables,it showed to be complex and dependent on a variety of factors.
+</p>
+<h4>As we observed, there is a link between wealth and happiness, with the latter being greater when the former is.</h4>
+
+<p>
+After we analyzed the factors that affected our ladder score, we identified that there is liner fit between them. These factors revealed that the data has linear correlation between factors , and our test hypothesis that higher GDP per Capita effects our happiness is true.
+Although not all the assumptions of Multiple regression were accepted, we observed the correlations of all the happiness factors from 149 countries on the happiness Score.we found out through Partial F-test that the Full model is significant better that the Partial Model (without Freedom to make life choices)
+</p>
+
+<h4>From our goals we aimed to achieve, we  truly believe that accomplished them, and we improved our skills in R, and how to implement Statistic model on data set.</h4>
+
+<img src="https://www.yocomentolibros.cl/wp-content/uploads/2020/07/Hapi-1980x990.jpeg" alt="Markdown Monster icon" width ="700" height="500"/>
+<p>
+As for our perspective, we see  how this data  captures the individuals feeling about their happiness as quality of life on the globe. However we do acknowledge that happiness is subjective, so you may live in an area where the score is lower, but you might fell happier and for you the half glass is full.
+</p>
+
+<h4>Finally, if you had the chance to live in one of the world's happiest countries, would you consider it?</h4>
+<h4>Thank you  for your time</h4>
+</div>
+  
+  
+  
+
+</div>
+<script>
+
+
+</script>
+
+</div>
+</body>
+
+
+
+
